@@ -2,19 +2,29 @@ import React from 'react';
 import style from './style.css';
 
 class Item extends React.Component {
-    _deleteHandle(e) {
-        this.props.deleteItemsHandle(this.props.id);
+    constructor(props) {
+        super(props);
+
+        this.handleInput = this.handleInput.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
     }
 
-    // Гибкая высота поля ввода
-    _inputHandle(e) {
+    handleInput(e) {
+        // Гибкая высота поля ввода
         e.target.style.height = '1.3em';
         e.target.style.height = e.target.scrollHeight + 'px';
+
+        this.props.handleItemInput(this.props.id, e.target.value);
     }
 
-    _blurHandle(e) {
+    handleDelete() {
+        this.props.handleItemDelete(this.props.id);
+    }
+
+    handleBlur(e) {
         if (!e.target.value) {
-            this._deleteHandle();
+            this.handleDelete();
         }
     }
 
@@ -22,10 +32,22 @@ class Item extends React.Component {
         return (
             <li className="list-group-item px-0 py-0 item">
                 <div className="me-3 pt-2 align-self-start item__left ">
-                    <input className="form-check-input item__input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onClick={this._deleteHandle.bind(this)} />
+                    <input 
+                        className="form-check-input item__input" 
+                        type="radio" 
+                        onClick={this.handleDelete}
+                    />
                 </div>
                 <div className="py-2 item__right">
-                    <textarea className="form-control py-0 w-100 item__input item__input--text" autoFocus aria-label="With textarea" placeholder={this.props.text} onInput={this._inputHandle.bind(this)} onBlur={this._blurHandle.bind(this)}></textarea>
+                    <textarea 
+                        className="form-control py-0 w-100 item__input item__input--text" 
+                        id={this.props.id}
+                        value={this.props.value} 
+                        placeholder={this.props.placeholder} 
+                        onInput={this.handleInput} 
+                        onBlur={this.handleBlur}
+                        autoFocus 
+                    ></textarea>
                 </div>
             </li>
         );
