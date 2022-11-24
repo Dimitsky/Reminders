@@ -3,7 +3,7 @@ import { Item } from './components/Item/Item.js';
 import { LS } from './components/LS/LS.js';
 import './App.css';
 
-const ls = new LS('todo');
+const ls = new LS('reminders');
 
 class App extends React.Component {
 	constructor(props) {
@@ -15,7 +15,13 @@ class App extends React.Component {
 
 		this.state = {
 			items: [], 
-		};		
+		};
+
+		if (ls.get().length) {
+			for (let data of ls.get()) {
+				this.state.items.push(data);
+			}
+		}
 	}
 
 	handleAdd() {
@@ -28,6 +34,8 @@ class App extends React.Component {
 
 		copyItems.push(newItem);
 
+		ls.set(newItem);
+
 		this.setState({
 			items: copyItems, 
 		});
@@ -39,6 +47,8 @@ class App extends React.Component {
 
 		copyItems[index].value = value;
 
+		ls.update(id, value);
+
 		this.setState({
 			items: copyItems, 
 		})
@@ -47,6 +57,8 @@ class App extends React.Component {
 	handleItemDelete(id) {
 		const copyItems = this.state.items.slice(0)
 			.filter(item => item.id !== id);
+
+		ls.remove(id);
 
 		this.setState({
 			items: copyItems, 

@@ -3,14 +3,18 @@
 Структура в localStorage:
 
 key: [
-    component_1, 
-    component_2, 
-    ..., 
+    {
+        id, 
+        value, 
+    }, 
+    {
+        id, 
+        value, 
+    }, 
+    ...
 ]
 
 */
-
-import React from "react";
 
 class LS {
     constructor(key) {
@@ -21,17 +25,28 @@ class LS {
         return JSON.parse(localStorage.getItem(this.key)) || [];
     }
 
-    set(component) {
+    set(data) {
         let ls = this.get();
 
-        ls.push(component);
+        ls.push(data);
         localStorage.setItem(this.key, JSON.stringify(ls));
     }
 
-    remove(component) {
+    remove(id) {
         let ls = this.get();
 
-        ls = ls.filter(lsComponent => lsComponent.props.id != component.props.id);
+        ls = ls.filter(data => data.id != id);
+        localStorage.setItem(this.key, JSON.stringify(ls));
+    }
+
+    update(id, value) {
+        let ls = this.get();
+        let data = ls.find(data => data.id === id);
+
+        if (data) {
+            data.value = value;
+        }
+
         localStorage.setItem(this.key, JSON.stringify(ls));
     }
 }

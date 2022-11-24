@@ -8,13 +8,16 @@ class Item extends React.Component {
         this.handleInput = this.handleInput.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
+
+        this.textarea = React.createRef();
+    }
+
+    componentDidMount() {
+        this.setFlexibleTextareaHeight(this.textarea.current);
     }
 
     handleInput(e) {
-        // Гибкая высота поля ввода
-        e.target.style.height = '1.3em';
-        e.target.style.height = e.target.scrollHeight + 'px';
-
+        this.setFlexibleTextareaHeight(e.target)
         this.props.handleItemInput(this.props.id, e.target.value);
     }
 
@@ -27,6 +30,12 @@ class Item extends React.Component {
             this.handleDelete();
         }
     }
+
+    // Гибкая высота поля ввода
+    setFlexibleTextareaHeight(target) {
+        target.style.height = '1.3em';
+        target.style.height = target.scrollHeight + 'px';        
+    }    
 
     render() {
         return (
@@ -41,6 +50,7 @@ class Item extends React.Component {
                 <div className="py-2 item__right">
                     <textarea 
                         className="form-control py-0 w-100 item__input item__input--text" 
+                        ref={this.textarea}
                         id={this.props.id}
                         value={this.props.value} 
                         placeholder={this.props.placeholder} 
